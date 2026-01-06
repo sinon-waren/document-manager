@@ -1,10 +1,10 @@
-package com.ministere.document_management.controller;
+package com.ministere.document_management.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
-import com.ministere.document_management.controller.enums.StatusDemande;
-import com.ministere.document_management.controller.enums.TypeDemande;
+import com.ministere.document_management.entity.enums.StatusDemande;
+import com.ministere.document_management.entity.enums.TypeDemande;
 
 @Entity
 @Table(name = "demandes")

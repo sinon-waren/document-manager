@@ -1,4 +1,4 @@
-package com.ministere.document_management.controller.enums;
+package com.ministere.document_management.entity.enums;
 
 public enum TypeDemande {
     EMPLOI,
