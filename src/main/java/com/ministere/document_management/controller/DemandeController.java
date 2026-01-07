@@ -1,7 +1,12 @@
 package com.ministere.document_management.controller;
 
+import com.ministere.document_management.dto.DemandeRequestDto;
+import com.ministere.document_management.dto.DemandeResponseDto;
 import com.ministere.document_management.entity.Demande;
 import com.ministere.document_management.service.DemandeService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +21,20 @@ public class DemandeController {
 
     public DemandeController (DemandeService demandeService){
         this.demandeService = demandeService; 
+    }
+
+    @PostMapping
+    public ResponseEntity<DemandeResponseDto> createDemandeFromDto(@PathVariable @RequestBody DemandeRequestDto dto){
+        Demande demande = demandeService.createDemandeFromDto(dto); 
+
+        DemandeResponseDto response = new DemandeResponseDto(
+            demande.getId(),
+            demande.getName(),
+            demande.getSurname(),
+            demande.getTypeDemande(),
+            demande.getStatus(),
+            demande.getFillinDate()); 
+        return new ResponseEntity<>(response, HttpStatus.CREATED); 
     }
 
     @PostMapping

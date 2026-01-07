@@ -29,7 +29,9 @@ public class Demande {
     private StatusDemande status;
 
     @Column(nullable = false)
-    private LocalDate fillingDate; 
+    private LocalDate fillingDate;
+
+    public LocalDate getFillinDate; 
 
     protected Demande() {}
 
@@ -46,6 +48,7 @@ public class Demande {
     public String getSurname() { return surname; }
     public TypeDemande getTypeDemande() { return typeDemande; }
     public StatusDemande getStatus() { return status; }
+    public LocalDate getFillinDate() { return fillingDate; }
 
     public void setName(String name) {
         this.name = name; 
@@ -62,6 +65,7 @@ public class Demande {
     public void setStatus(StatusDemande status){
         this.status = status; 
     }
+
 
 
 

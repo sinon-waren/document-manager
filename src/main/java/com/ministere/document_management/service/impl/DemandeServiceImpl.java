@@ -1,5 +1,6 @@
 package com.ministere.document_management.service.impl;
 
+import com.ministere.document_management.dto.DemandeRequestDto;
 import com.ministere.document_management.entity.*;
 import com.ministere.document_management.repository.DemandeRepository;
 import com.ministere.document_management.service.DemandeService;
@@ -31,6 +32,12 @@ public class DemandeServiceImpl implements DemandeService {
     public Demande recoverDemandeById (Long id){
         return demandeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Demande not found")); 
+    }
+
+    @Override
+    public Demande createDemandeFromDto(DemandeRequestDto dto){
+        Demande demande = new Demande(dto.getName(), dto.getSurname(), dto.getTypeDemande()); 
+        return demandeRepository.save(demande); 
     }
 
     
