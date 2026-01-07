@@ -41,11 +41,23 @@ public class Demande {
         this.fillingDate = LocalDate.now(); 
     }
 
-
+    public Long getId() {return id;}
     public String getName() { return name; }
     public String getSurname() { return surname; }
     public TypeDemande getTypeDemande() { return typeDemande; }
     public StatusDemande getStatus() { return status; }
+
+    public void setName(String name) {
+        this.name = name; 
+    }
+
+    public void setSurnamer(String surname) {
+        this.surname = surname; 
+    }
+
+    public void setTypeDemande(TypeDemande typeDemande){
+        this.typeDemande = typeDemande; 
+    }
 
     public void setStatus(StatusDemande status){
         this.status = status; 
