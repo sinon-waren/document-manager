@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import com.ministere.document_management.entity.Demande;
 import com.ministere.document_management.entity.enums.TypeDemande;
 import com.ministere.document_management.repository.DemandeRepository;
+import com.ministere.document_management.service.DemandeService;
 
 @SpringBootApplication
 public class DocumentManagementApplication {
@@ -16,15 +17,14 @@ public class DocumentManagementApplication {
 		SpringApplication.run(DocumentManagementApplication.class, args);
 	}
 
-	@Bean
-CommandLineRunner testDemande(DemandeRepository repository) {
+@Bean
+CommandLineRunner testService(DemandeService demandeService) {
     return args -> {
-        repository.save(new Demande("Dupont", "Jean", TypeDemande.EMPLOI));
-        repository.save(new Demande("Martin", "Sarah", TypeDemande.STAGE));
+        Demande d = new Demande("Ali", "Youssef", TypeDemande.EMPLOI);
+        demandeService.createDemande(d);
 
-        repository.findAll().forEach(d ->
-                System.out.println(d.getName() + " " + d.getStatus())
-        );
+        demandeService.recoverAllDemande()
+                .forEach(x -> System.out.println(x.getName()));
     };
 }
 
