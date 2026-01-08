@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface DemandeService {
 
-    Demande createDemande(Demande demande); 
+    //Demande createDemande(Demande demande); 
 
     Demande createDemandeFromDto(DemandeRequestDto dto); 
     

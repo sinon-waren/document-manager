@@ -16,7 +16,7 @@ public class DocumentManagementApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(DocumentManagementApplication.class, args);
 	}
-
+/* 
 @Bean
 CommandLineRunner testService(DemandeService demandeService) {
     return args -> {
@@ -26,6 +26,6 @@ CommandLineRunner testService(DemandeService demandeService) {
         demandeService.recoverAllDemande()
                 .forEach(x -> System.out.println(x.getName()));
     };
-}
+}*/
 
 }
