@@ -24,7 +24,7 @@ public class DemandeController {
     }
 
     @PostMapping
-    public ResponseEntity<DemandeResponseDto> createDemandeFromDto(@PathVariable @RequestBody DemandeRequestDto dto){
+    public ResponseEntity<DemandeResponseDto> createDemandeFromDto( @RequestBody DemandeRequestDto dto){
         Demande demande = demandeService.createDemandeFromDto(dto); 
 
         DemandeResponseDto response = new DemandeResponseDto(
@@ -37,11 +37,11 @@ public class DemandeController {
         return new ResponseEntity<>(response, HttpStatus.CREATED); 
     }
 
-    @PostMapping
+   /*  @PostMapping
     public ResponseEntity<Demande> createDemande(@RequestBody Demande demande){
         Demande saved = demandeService.createDemande(demande); 
         return new ResponseEntity<>(saved, HttpStatus.CREATED); 
-    }
+    }*/
 
     @GetMapping
     public ResponseEntity<List<Demande>> getAllDemandes() {
