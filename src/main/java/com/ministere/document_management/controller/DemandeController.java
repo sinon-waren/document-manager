@@ -33,7 +33,7 @@ public class DemandeController {
             demande.getSurname(),
             demande.getTypeDemande(),
             demande.getStatus(),
-            demande.getFillinDate()); 
+            demande.getFillingDate()); 
         return new ResponseEntity<>(response, HttpStatus.CREATED); 
     }
 

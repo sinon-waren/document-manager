@@ -36,7 +36,7 @@ public class DemandeResponseDto {
     public String getSurname() { return surname; }
     public TypeDemande getTypeDemande() { return typeDemande; }
     public StatusDemande getStatus() { return status; }
-    public LocalDate getFillinDate() { return fillingDate; }
+    public LocalDate getFillingDate() { return fillingDate; }
 
     
 }
