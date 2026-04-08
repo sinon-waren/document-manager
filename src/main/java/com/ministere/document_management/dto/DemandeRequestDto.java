@@ -14,7 +14,7 @@ public class DemandeRequestDto {
     @NotBlank(message = "the surname is required")
     private String surname; 
 
-    @NotBlank(message = "the demande type is required")
+    @NotNull
     private TypeDemande typeDemande; 
 
     public String getName(){

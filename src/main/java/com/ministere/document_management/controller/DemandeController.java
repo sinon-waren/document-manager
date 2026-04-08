@@ -24,7 +24,7 @@ public class DemandeController {
     }
 
     @PostMapping
-    public ResponseEntity<DemandeResponseDto> createDemandeFromDto( @RequestBody DemandeRequestDto dto){
+    public ResponseEntity<DemandeResponseDto> createDemandeFromDto( @Valid @RequestBody DemandeRequestDto dto){
         Demande demande = demandeService.createDemandeFromDto(dto); 
 
         DemandeResponseDto response = new DemandeResponseDto(

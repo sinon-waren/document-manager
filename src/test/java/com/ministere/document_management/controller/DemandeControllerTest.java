@@ -15,9 +15,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -57,5 +59,64 @@ public class DemandeControllerTest {
                 .andExpect(jsonPath("$.status").value("RECU")); 
 
     }
+
+    @Test 
+    void checkGetAllDemande() throws Exception {
+
+        List<Demande> demandes = List.of(
+            new Demande("John", "Doe", TypeDemande.EMPLOI),
+            new Demande("Jane", "Smith", TypeDemande.BOURSE)
+        ); 
+        
+        demandes.get(0).setId(1L);
+        demandes.get(1).setId(2L);
+
+        when(demandeService.recoverAllDemande()).thenReturn(demandes); 
+
+        mockMvc.perform(get("/api/demandes"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(2))
+                .andExpect(jsonPath("$[0].name").value("John"))
+                .andExpect(jsonPath("$[1].name").value("Jane")); 
+    }
+
+    @Test
+    void checkGetIdDemande() throws Exception {
+        Demande demande = new Demande("John", "Doe", TypeDemande.EMPLOI); 
+        demande.setId(1L);
+
+        when(demandeService.recoverDemandeById(1L)).thenReturn(demande);
+
+        mockMvc.perform(get("/api/demandes/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("John"))
+                .andExpect(jsonPath("$.surname").value("Doe")); 
+
+    }
+
+    @Test
+    void shouldReturn400WhenInvalidInput() throws Exception {
+        String invalidJson  = """
+                {
+                    "name": "John",
+                    "surname": "Doe"
+                }
+                """;
+
+        mockMvc.perform(post("/api/demandes")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(invalidJson))
+                .andExpect(status().isBadRequest()); 
+    }
+
+    // retry again this test because it's not functionnal
+    @Test
+    void shouldReturn404WhenDemandeNotFound() throws Exception {
+        when(demandeService.recoverDemandeById(99L)).thenThrow(new RuntimeException("Not found")); 
+
+        mockMvc.perform(get("/api/demandes/99"))
+                .andExpect(status().isInternalServerError()); 
+    }
+
     
 }
