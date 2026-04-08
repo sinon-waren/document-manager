@@ -32,7 +32,7 @@ public class Demande {
     private LocalDate fillingDate;
 
 
-    protected Demande() {}
+    public Demande() {}
 
     public Demande(String name, String surname, TypeDemande typeDemande){
         this.name = name;
@@ -63,6 +63,10 @@ public class Demande {
 
     public void setStatus(StatusDemande status){
         this.status = status; 
+    }
+
+    public void setId(Long id) {
+        this.id = id; 
     }
 
 
