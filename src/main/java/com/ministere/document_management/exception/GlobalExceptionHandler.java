@@ -39,7 +39,7 @@ public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNot
             .stream()
             .map(error -> error.getField() + ": " + error.getDefaultMessage())
             .findFirst()
-            .orElse("Erreur de validation");
+            .orElse("Validation error");
 
     ErrorResponse error = new ErrorResponse(
             message,
