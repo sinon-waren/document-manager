@@ -2,6 +2,7 @@ package com.ministere.document_management.service.impl;
 
 import com.ministere.document_management.dto.DemandeRequestDto;
 import com.ministere.document_management.entity.*;
+import com.ministere.document_management.exception.DemandeNotFoundException;
 import com.ministere.document_management.repository.DemandeRepository;
 import com.ministere.document_management.service.DemandeService;
 
@@ -30,8 +31,11 @@ public class DemandeServiceImpl implements DemandeService {
 
     @Override
     public Demande recoverDemandeById (Long id){
-        return demandeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Demande not found")); 
+        Demande demande = demandeRepository.findById(id)
+            .orElseThrow(() -> new DemandeNotFoundException(
+                    "Demande with ID " + id + " not found"
+            ));
+        return demande; 
     }
 
     @Override

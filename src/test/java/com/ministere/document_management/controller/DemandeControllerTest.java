@@ -5,6 +5,7 @@ import com.ministere.document_management.dto.DemandeResponseDto;
 import com.ministere.document_management.entity.Demande;
 import com.ministere.document_management.entity.enums.StatusDemande;
 import com.ministere.document_management.entity.enums.TypeDemande;
+import com.ministere.document_management.exception.DemandeNotFoundException;
 import com.ministere.document_management.service.DemandeService;
 
 import org.junit.jupiter.api.Test;
@@ -112,10 +113,14 @@ public class DemandeControllerTest {
     // retry again this test because it's not functionnal
     @Test
     void shouldReturn404WhenDemandeNotFound() throws Exception {
-        when(demandeService.recoverDemandeById(99L)).thenThrow(new RuntimeException("Not found")); 
+        Long id = 1L; 
 
-        mockMvc.perform(get("/api/demandes/99"))
-                .andExpect(status().isInternalServerError()); 
+        when(demandeService.recoverDemandeById(id)).thenThrow(new DemandeNotFoundException("Demande not found")); 
+
+        mockMvc.perform(get("/api/demandes/{id}", id))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Demande not found"))
+                .andExpect(jsonPath("$.status").value(404)); 
     }
 
     
