@@ -30,12 +30,13 @@ public class DemandeServiceImpl implements DemandeService {
     }
 
     @Override
+    //Refactor controller, service, controller test with DTO
     public Demande recoverDemandeById (Long id){
         Demande demande = demandeRepository.findById(id)
             .orElseThrow(() -> new DemandeNotFoundException(
                     "Demande with ID " + id + " not found"
             ));
-        return demande; 
+        return demande ; 
     }
 
     @Override

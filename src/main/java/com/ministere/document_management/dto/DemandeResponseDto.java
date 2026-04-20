@@ -1,6 +1,7 @@
 package com.ministere.document_management.dto;
 
 import com.ministere.document_management.entity.enums.TypeDemande;
+import com.ministere.document_management.entity.Demande;
 import com.ministere.document_management.entity.enums.StatusDemande;
 
 import java.time.LocalDate;
@@ -30,6 +31,17 @@ public class DemandeResponseDto {
         this.status = status;
         this.fillingDate = fillingDate;
     }
+
+    private DemandeResponseDto mapToDto(Demande demande) {
+    return new DemandeResponseDto(
+            demande.getId(),
+            demande.getName(),
+            demande.getSurname(),
+            demande.getTypeDemande(),
+            demande.getStatus(),
+            demande.getFillingDate()
+    );
+}
 
     public Long getId() { return id; }
     public String getName() { return name; }
