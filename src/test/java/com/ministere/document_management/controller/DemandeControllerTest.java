@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
@@ -26,6 +27,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -148,6 +150,67 @@ public class DemandeControllerTest {
                         .andExpect(jsonPath("$.message").value("Demande not found"))
                         .andExpect(jsonPath("$.status").value(404)); 
         verify(demandeService).deleteDemande(id);
+    }
+
+    @Test
+    void shouldUpdateDemandeWhenIdExists() throws Exception {
+
+        Long id = 1L; 
+
+        String requestJson = """
+        {
+            "name": "John",
+            "surname": "Doe",
+            "typeDemande": "EMPLOI",
+            "status": "EN_COURS",
+            "fillingDate": "2024-06-20"
+        }
+        """;
+        Demande updateDemande = new Demande(); 
+        updateDemande.setId(id);
+        updateDemande.setName("John");
+        updateDemande.setSurname("Doe");
+
+        when(demandeService.updateDemande(eq(id), any(Demande.class)))
+                .thenReturn(updateDemande); 
+        
+        mockMvc.perform(put("/api/demandes/{id}", id)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestJson))
+                            .andExpect(status().isOk())
+                            .andExpect(jsonPath("$.id").value(id))
+                            .andExpect(jsonPath("$.name").value("John"))
+                            .andExpect(jsonPath("$.surname").value("Doe"));
+        verify(demandeService).updateDemande(eq(id), any(Demande.class));
+
+
+    }
+
+    @Test
+    void shouldReturn404WhenUpdatingNoExistingDemande() throws Exception {
+
+        Long id = 1L; 
+
+        String requestJson = """
+        {
+            "name": "John",
+            "surname": "Doe",
+            "typeDemande": "EMPLOI",
+            "status": "EN_COURS",
+            "fillingDate": "2024-06-20"
+        }
+        """;
+
+        when(demandeService.updateDemande(eq(id), any(Demande.class)))
+                .thenThrow(new DemandeNotFoundException("Demande not found")); 
+
+        mockMvc.perform(put("/api/demandes/{id}", id)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestJson))
+                            .andExpect(status().isNotFound())
+                            .andExpect(jsonPath("$.message").value("Demande not found"))
+                            .andExpect(jsonPath("$.status").value(404));
+        verify(demandeService).updateDemande(eq(id), any(Demande.class)); 
     }
 
     
