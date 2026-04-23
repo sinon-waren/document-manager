@@ -14,6 +14,11 @@ public interface DemandeService {
     
     List <Demande> recoverAllDemande();
 
-    Demande recoverDemandeById (Long id); 
+    Demande recoverDemandeById (Long id);
+
+    Demande updateDemande(Long id, Demande updateDemande);
+
+    void deleteDemande(Long id); 
+
     
 }

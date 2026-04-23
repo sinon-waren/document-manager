@@ -53,5 +53,17 @@ public class DemandeController {
         return ResponseEntity.ok(demandeService.recoverDemandeById(id)); 
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Demande> updateDemande (@PathVariable Long id, @RequestBody Demande demande){
+        return ResponseEntity.ok(demandeService.updateDemande(id, demande)); 
+
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteDemande(@PathVariable Long id){
+        demandeService.deleteDemande(id);
+        return ResponseEntity.noContent().build(); 
+    }
+
     
 }

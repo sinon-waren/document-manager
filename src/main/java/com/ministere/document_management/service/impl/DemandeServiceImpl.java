@@ -45,5 +45,28 @@ public class DemandeServiceImpl implements DemandeService {
         return demandeRepository.save(demande); 
     }
 
+    @Override
+    public Demande updateDemande(Long id, Demande updateDemande){
+        Demande existing = demandeRepository.findById(id)
+                        .orElseThrow( () -> new DemandeNotFoundException(
+                            "Demande with ID " + id + " not found"));
+        existing.setName(updateDemande.getName());
+        existing.setSurname(updateDemande.getSurname());
+        existing.setTypeDemande(updateDemande.getTypeDemande());
+        existing.setStatus(updateDemande.getStatus());
+        
+        return demandeRepository.save(existing); 
+
+    }
+
+    @Override
+    public void deleteDemande(Long id){
+        if(!demandeRepository.existsById(id)) {
+            throw new DemandeNotFoundException("Demande with ID " + id + " not found"); 
+        }
+
+        demandeRepository.deleteById(id);
+    }
+
     
 }

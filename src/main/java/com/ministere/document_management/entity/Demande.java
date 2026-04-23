@@ -53,7 +53,7 @@ public class Demande {
         this.name = name; 
     }
 
-    public void setSurnamer(String surname) {
+    public void setSurname(String surname) {
         this.surname = surname; 
     }
 
