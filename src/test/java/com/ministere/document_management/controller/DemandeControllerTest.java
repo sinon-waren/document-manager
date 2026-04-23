@@ -19,7 +19,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -121,6 +125,29 @@ public class DemandeControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Demande not found"))
                 .andExpect(jsonPath("$.status").value(404)); 
+    }
+
+    @Test
+    void shouldDeleteDemandeWhenIdExists() throws Exception {
+        Long id = 1L; 
+        doNothing().when(demandeService).deleteDemande(id);
+
+        mockMvc.perform(delete("/api/demandes/{id}", id))
+                .andExpect(status().isNoContent()); 
+        verify(demandeService).deleteDemande(id);
+    }
+
+    @Test
+    void shouldReturn404WhenDeletingNoExistingDemande() throws Exception {
+        Long id = 1L; 
+        doThrow(new DemandeNotFoundException("Demande not found"))
+                .when(demandeService).deleteDemande(id);
+        
+        mockMvc.perform(delete("/api/demandes/{id}", id))
+                        .andExpect(status().isNotFound())
+                        .andExpect(jsonPath("$.message").value("Demande not found"))
+                        .andExpect(jsonPath("$.status").value(404)); 
+        verify(demandeService).deleteDemande(id);
     }
 
     
