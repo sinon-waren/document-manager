@@ -25,15 +25,8 @@ public class DemandeController {
 
     @PostMapping
     public ResponseEntity<DemandeResponseDto> createDemandeFromDto( @Valid @RequestBody DemandeRequestDto dto){
-        Demande demande = demandeService.createDemandeFromDto(dto); 
-
-        DemandeResponseDto response = new DemandeResponseDto(
-            demande.getId(),
-            demande.getName(),
-            demande.getSurname(),
-            demande.getTypeDemande(),
-            demande.getStatus(),
-            demande.getFillingDate()); 
+        
+        DemandeResponseDto response = demandeService.createDemandeFromDto(dto); 
         return new ResponseEntity<>(response, HttpStatus.CREATED); 
     }
 
@@ -44,18 +37,18 @@ public class DemandeController {
     }*/
 
     @GetMapping
-    public ResponseEntity<List<Demande>> getAllDemandes() {
+    public ResponseEntity<List<DemandeResponseDto>> getAllDemandes() {
         return ResponseEntity.ok(demandeService.recoverAllDemande()); 
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Demande> getDemandeById(@PathVariable Long id){
+    public ResponseEntity<DemandeResponseDto> getDemandeById(@PathVariable Long id){
         return ResponseEntity.ok(demandeService.recoverDemandeById(id)); 
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Demande> updateDemande (@PathVariable Long id, @RequestBody Demande demande){
-        return ResponseEntity.ok(demandeService.updateDemande(id, demande)); 
+    public ResponseEntity<DemandeResponseDto> updateDemande (@PathVariable Long id, @RequestBody DemandeRequestDto dto){
+        return ResponseEntity.ok(demandeService.updateDemande(id, dto)); 
 
     }
 

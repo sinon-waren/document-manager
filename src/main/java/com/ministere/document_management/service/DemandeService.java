@@ -10,13 +10,13 @@ public interface DemandeService {
 
     //Demande createDemande(Demande demande); 
 
-    Demande createDemandeFromDto(DemandeRequestDto dto); 
+    DemandeResponseDto createDemandeFromDto(DemandeRequestDto dto); 
     
-    List <Demande> recoverAllDemande();
+    List <DemandeResponseDto> recoverAllDemande();
 
-    Demande recoverDemandeById (Long id);
+    DemandeResponseDto recoverDemandeById (Long id);
 
-    Demande updateDemande(Long id, Demande updateDemande);
+    DemandeResponseDto updateDemande(Long id, DemandeRequestDto requestDto);
 
     void deleteDemande(Long id); 
 

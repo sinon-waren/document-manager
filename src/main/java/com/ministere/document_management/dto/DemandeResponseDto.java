@@ -32,16 +32,6 @@ public class DemandeResponseDto {
         this.fillingDate = fillingDate;
     }
 
-    private DemandeResponseDto mapToDto(Demande demande) {
-    return new DemandeResponseDto(
-            demande.getId(),
-            demande.getName(),
-            demande.getSurname(),
-            demande.getTypeDemande(),
-            demande.getStatus(),
-            demande.getFillingDate()
-    );
-}
 
     public Long getId() { return id; }
     public String getName() { return name; }
