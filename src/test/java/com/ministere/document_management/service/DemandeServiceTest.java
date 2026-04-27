@@ -55,6 +55,28 @@ public class DemandeServiceTest {
 
     }
 
+    @Test
+    public void shouldReturnDemandeDtoWhenIdExists() {
+        
+        Long id = 1L; 
+
+        Demande demande = new Demande(); 
+        demande.setId(id);
+        demande.setName("John");
+
+        when(demandeRepository.findById(id)).thenReturn(Optional.of(demande)); 
+
+        DemandeResponseDto result = demandeService.recoverDemandeById(id); 
+
+        assertNotNull(result);
+        assertEquals(id, result.getId());
+        assertEquals("John", result.getName());
+
+        verify(demandeRepository).findById(id); 
+    }
+
+    
+
 
 
 }
