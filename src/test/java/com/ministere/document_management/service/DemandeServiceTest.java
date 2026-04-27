@@ -75,7 +75,32 @@ public class DemandeServiceTest {
         verify(demandeRepository).findById(id); 
     }
 
-    
+    @Test
+    public void shouldUpdateDemande() {
+
+        Long id = 1L; 
+
+        Demande demande = new Demande(); 
+        demande.setId(id);
+        demande.setStatus(StatusDemande.EN_COURS);
+
+        DemandeRequestDto requestDto = new DemandeRequestDto(); 
+        requestDto.setName("John Updated");
+        requestDto.setSurname("Doe");
+        requestDto.setTypeDemande(TypeDemande.BOURSE);
+
+        when(demandeRepository.findById(id)).thenReturn(Optional.of(demande)); 
+        when(demandeRepository.save(any(Demande.class))).thenReturn(demande); 
+
+        DemandeResponseDto result = demandeService.updateDemande(id, requestDto); 
+
+        assertEquals("John Updated", result.getName());
+        assertEquals(StatusDemande.EN_COURS, result.getStatus());
+
+        verify(demandeRepository).save(demande); 
+    }
+
+
 
 
 
