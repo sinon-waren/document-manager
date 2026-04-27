@@ -69,6 +69,10 @@ public class Demande {
         this.id = id; 
     }
 
+    public void setFillingDate(LocalDate fillingDate){
+        this.fillingDate = fillingDate; 
+    }
+
 
 
 

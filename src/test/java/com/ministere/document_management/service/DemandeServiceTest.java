@@ -1,5 +1,6 @@
 package com.ministere.document_management.service;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.ministere.document_management.dto.DemandeRequestDto;
 import com.ministere.document_management.dto.DemandeResponseDto;
 import com.ministere.document_management.entity.Demande;
+import com.ministere.document_management.entity.enums.StatusDemande;
+import com.ministere.document_management.entity.enums.TypeDemande;
 import com.ministere.document_management.repository.DemandeRepository;
 import com.ministere.document_management.service.impl.DemandeServiceImpl;
 
@@ -23,27 +26,35 @@ public class DemandeServiceTest {
     private DemandeRepository demandeRepository; 
 
     @InjectMocks
-    private DemandeServiceImpl demandeService; 
-/* 
-    @Test 
-    void shouldReturnDemandeWhenIdExists(){
+    private DemandeServiceImpl demandeService;
 
-        Long id = 1L; 
+    @Test
+    public void shouldCreateDemandeFromDto() {
+        DemandeRequestDto requestDto = new DemandeRequestDto(); 
+        requestDto.setName("John");
+        requestDto.setSurname("Doe");
+        requestDto.setTypeDemande(TypeDemande.BOURSE);
 
-        Demande demande = new Demande();
-        demande.setId(id);
+        Demande saved = new Demande(); 
 
-        when(demandeRepository.findById(id)).thenReturn(Optional.of(demande));
+        saved.setId(1L);
+        saved.setName("John");
+        saved.setSurname("Doe");
+        saved.setTypeDemande(TypeDemande.BOURSE);
+        saved.setStatus(StatusDemande.EN_COURS);
+        saved.setFillingDate(LocalDate.now());
 
-        Demande result = demandeService.recoverDemandeById(id);
+        when(demandeRepository.save(any(Demande.class))).thenReturn(saved); 
+
+        DemandeResponseDto result = demandeService.createDemandeFromDto(requestDto); 
 
         assertNotNull(result);
-        assertEquals(id, result.getId()); 
+        assertEquals("John", result.getName());
+        assertEquals(StatusDemande.EN_COURS, result.getStatus());
+        verify(demandeRepository).save(any(Demande.class)); 
 
-        verify(demandeRepository).findById(id); 
+    }
 
-        
-    }*/
 
 
 }

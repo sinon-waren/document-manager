@@ -39,7 +39,7 @@ public class DemandeControllerTest {
 
     @MockBean
     private DemandeService demandeService;
-
+    
     @Test
     void shouldCreateDemande() throws Exception {
         String requestJson = """
@@ -134,7 +134,7 @@ public class DemandeControllerTest {
                 .andExpect(status().isBadRequest()); 
     }
 
-    // retry again this test because it's not functionnal
+
     @Test
     void shouldReturn404WhenDemandeNotFound() throws Exception {
         Long id = 1L; 
