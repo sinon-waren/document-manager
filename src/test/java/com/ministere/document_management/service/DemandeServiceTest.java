@@ -16,6 +16,7 @@ import com.ministere.document_management.dto.DemandeResponseDto;
 import com.ministere.document_management.entity.Demande;
 import com.ministere.document_management.entity.enums.StatusDemande;
 import com.ministere.document_management.entity.enums.TypeDemande;
+import com.ministere.document_management.exception.DemandeNotFoundException;
 import com.ministere.document_management.repository.DemandeRepository;
 import com.ministere.document_management.service.impl.DemandeServiceImpl;
 
@@ -98,6 +99,27 @@ public class DemandeServiceTest {
         assertEquals(StatusDemande.EN_COURS, result.getStatus());
 
         verify(demandeRepository).save(demande); 
+    }
+
+
+    @Test 
+    public void shouldDeleteDemande() {
+        Long id = 1L; 
+
+        when(demandeRepository.existsById(id)).thenReturn(true); 
+        
+        demandeService.deleteDemande(id);
+        verify(demandeRepository).deleteById(id);
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenDeleteNoExistingDemande() {
+        Long id = 1L; 
+
+        when(demandeRepository.existsById(id)).thenReturn(false); 
+
+        assertThrows(DemandeNotFoundException.class, () -> {demandeService.deleteDemande(id);});
+        verify(demandeRepository).existsById(id); 
     }
 
 
