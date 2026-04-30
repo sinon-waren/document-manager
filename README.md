@@ -1,60 +1,62 @@
 # 📌 Document Management API
 
-API REST développée avec Spring Boot pour la gestion des demandes (Demande).
+A RESTful API built with Spring Boot for managing requests (Demande).
 
 ---
 
-# 🚀 Stack technique
+# 🚀 Tech Stack
 
 - Java 17
 - Spring Boot 3
 - Spring Data JPA
 - H2 / PostgreSQL
-- Mockito & MockMvc (tests)
-- JaCoCo (test coverage)
+- Mockito & MockMvc (testing)
+- JaCoCo (code coverage)
 - GitHub Actions (CI/CD)
 
 ---
 
 # 🧱 Architecture
 
-- Controller → gestion des endpoints REST
-- Service → logique métier
-- Repository → accès base de données
-- DTO → séparation API / Entity
-- Exception → gestion globale des erreurs (@ControllerAdvice)
+The application follows a clean layered architecture:
+
+- **Controller** → Handles REST API endpoints
+- **Service** → Contains business logic
+- **Repository** → Handles data persistence
+- **DTO** → Separates API layer from Entity layer
+- **Exception Handling** → Global error handling using `@ControllerAdvice`
 
 ---
 
-# ⚙️ Fonctionnalités
+# ⚙️ Features
 
-- ✅ Créer une demande
-- ✅ Récupérer toutes les demandes
-- ✅ Récupérer une demande par ID
-- ✅ Mettre à jour une demande
-- ✅ Supprimer une demande
-
----
-
-# 🧠 Règles métier
-
-- Le `status` est automatiquement défini à `EN_COURS`
-- La `fillingDate` est définie à la date de création
-- Le `status` ne peut pas être modifié via l'API
+- ✅ Create a request
+- ✅ Retrieve all requests
+- ✅ Retrieve a request by ID
+- ✅ Update a request
+- ✅ Delete a request
 
 ---
 
-# 🧪 Tests
+# 🧠 Business Rules
 
-- Tests unitaires avec Mockito (service)
-- Tests d'intégration avec MockMvc (controller)
-- Tests des cas positifs et négatifs (400, 404, etc.)
+- The `status` is automatically set to `EN_COURS` upon creation
+- The `fillingDate` is automatically set to the current date
+- The `status` cannot be modified via the API
 
 ---
 
-# 📊 Test Coverage
+# 🧪 Testing
 
-Couverture du code avec JaCoCo.
+- Unit tests using Mockito (service layer)
+- Integration tests using MockMvc (controller layer)
+- Covers both positive and negative scenarios (400, 404, etc.)
+
+---
+
+# 📊 Code Coverage
+
+Code coverage is measured using JaCoCo.
 
 ```bash
 mvn clean test
