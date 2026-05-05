@@ -7,30 +7,34 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ministere.document_management.repository.UserRepository;
+import com.ministere.document_management.service.JwtService;
 import com.ministere.document_management.dto.LoginRequestDto;
 import com.ministere.document_management.entity.User;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-    
-    private final UserRepository userRepository; 
 
-    public AuthController(UserRepository userRepository){
-        this.userRepository = userRepository; 
+    private final UserRepository userRepository;
+    private final JwtService jwtService;
+
+    public AuthController(UserRepository userRepository, JwtService jwtService) {
+        this.userRepository = userRepository;
+        this.jwtService = jwtService;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequestDto request){
+    public ResponseEntity<String> login(@RequestBody LoginRequestDto request) {
 
         User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found")); 
-        
-        if(!user.getPassword().equals(request.getPassword())){
-            throw new RuntimeException("Invalid password"); 
-        }
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return ResponseEntity.ok("Login Successful"); 
+        if (!user.getPassword().equals(request.getPassword())) {
+            throw new RuntimeException("Invalid password");
+        }
+        String token = jwtService.generationToken(user.getUsername());
+
+        return ResponseEntity.ok(token);
 
     }
 }
