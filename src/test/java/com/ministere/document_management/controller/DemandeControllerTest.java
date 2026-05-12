@@ -10,6 +10,7 @@ import com.ministere.document_management.service.DemandeService;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -30,7 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
+@AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(DemandeController.class)
 public class DemandeControllerTest {
 
@@ -39,29 +40,29 @@ public class DemandeControllerTest {
 
     @MockBean
     private DemandeService demandeService;
-    
+
     @Test
     void shouldCreateDemande() throws Exception {
         String requestJson = """
-        {
-            "name": "John",
-            "surname": "Doe",
-            "typeDemande": "EMPLOI",
-            "status": "EN_COURS",
-            "fillingDate": "2024-06-20"
-        }
-    """;
+                    {
+                        "name": "John",
+                        "surname": "Doe",
+                        "typeDemande": "EMPLOI",
+                        "status": "EN_COURS",
+                        "fillingDate": "2024-06-20"
+                    }
+                """;
 
         DemandeResponseDto responseDto = new DemandeResponseDto(
-            1L,
-            "John",
-            "Doe",
-            TypeDemande.EMPLOI,
-            StatusDemande.EN_COURS,
-            LocalDate.of(2024, 6, 20)); 
+                1L,
+                "John",
+                "Doe",
+                TypeDemande.EMPLOI,
+                StatusDemande.EN_COURS,
+                LocalDate.of(2024, 6, 20));
 
         when(demandeService.createDemandeFromDto(any(DemandeRequestDto.class)))
-            .thenReturn(responseDto); 
+                .thenReturn(responseDto);
 
         mockMvc.perform(post("/api/demandes")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -71,19 +72,21 @@ public class DemandeControllerTest {
                 .andExpect(jsonPath("$.name").value("John"))
                 .andExpect(jsonPath("$.surname").value("Doe"))
                 .andExpect(jsonPath("$.typeDemande").value("EMPLOI"))
-                .andExpect(jsonPath("$.status").value("EN_COURS")); 
+                .andExpect(jsonPath("$.status").value("EN_COURS"));
 
-        verify(demandeService).createDemandeFromDto(any(DemandeRequestDto.class)); 
+        verify(demandeService).createDemandeFromDto(any(DemandeRequestDto.class));
 
     }
 
-    @Test 
+    @Test
     void checkGetAllDemande() throws Exception {
 
-        DemandeResponseDto dto1 = new DemandeResponseDto(1L, "John", "Doe", TypeDemande.EMPLOI, StatusDemande.EN_COURS, LocalDate.now());
-        DemandeResponseDto dto2 = new DemandeResponseDto(1L, "Jane", "Smith", TypeDemande.BOURSE, StatusDemande.RECU, LocalDate.now());
+        DemandeResponseDto dto1 = new DemandeResponseDto(1L, "John", "Doe", TypeDemande.EMPLOI, StatusDemande.EN_COURS,
+                LocalDate.now());
+        DemandeResponseDto dto2 = new DemandeResponseDto(1L, "Jane", "Smith", TypeDemande.BOURSE, StatusDemande.RECU,
+                LocalDate.now());
 
-        when(demandeService.recoverAllDemande()).thenReturn(List.of(dto1, dto2)); 
+        when(demandeService.recoverAllDemande()).thenReturn(List.of(dto1, dto2));
 
         mockMvc.perform(get("/api/demandes"))
                 .andExpect(status().isOk())
@@ -91,7 +94,7 @@ public class DemandeControllerTest {
                 .andExpect(jsonPath("$[0].name").value("John"))
                 .andExpect(jsonPath("$[1].name").value("Jane"));
 
-        verify(demandeService).recoverAllDemande(); 
+        verify(demandeService).recoverAllDemande();
     }
 
     @Test
@@ -103,10 +106,9 @@ public class DemandeControllerTest {
                 "Doe",
                 TypeDemande.EMPLOI,
                 StatusDemande.EN_COURS,
-                LocalDate.of(2024, 6, 20)); 
-        // revoir le mapping de donner 
+                LocalDate.of(2024, 6, 20));
+        // revoir le mapping de donner
         when(demandeService.recoverDemandeById(id)).thenReturn(dto);
-
 
         mockMvc.perform(get("/api/demandes/{id}", id))
                 .andExpect(status().isOk())
@@ -115,13 +117,13 @@ public class DemandeControllerTest {
                 .andExpect(jsonPath("$.surname").value("Doe"))
                 .andExpect(jsonPath("$.typeDemande").value("EMPLOI"))
                 .andExpect(jsonPath("$.status").value("EN_COURS"));
-        verify(demandeService).recoverDemandeById(id); 
+        verify(demandeService).recoverDemandeById(id);
 
     }
 
     @Test
     void shouldReturn400WhenInvalidInput() throws Exception {
-        String invalidJson  = """
+        String invalidJson = """
                 {
                     "name": "John",
                     "surname": "Doe"
@@ -129,110 +131,107 @@ public class DemandeControllerTest {
                 """;
 
         mockMvc.perform(post("/api/demandes")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(invalidJson))
-                .andExpect(status().isBadRequest()); 
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(invalidJson))
+                .andExpect(status().isBadRequest());
     }
-
 
     @Test
     void shouldReturn404WhenDemandeNotFound() throws Exception {
-        Long id = 1L; 
+        Long id = 1L;
 
-        when(demandeService.recoverDemandeById(id)).thenThrow(new DemandeNotFoundException("Demande not found")); 
+        when(demandeService.recoverDemandeById(id)).thenThrow(new DemandeNotFoundException("Demande not found"));
 
         mockMvc.perform(get("/api/demandes/{id}", id))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Demande not found"))
-                .andExpect(jsonPath("$.status").value(404)); 
+                .andExpect(jsonPath("$.status").value(404));
     }
 
     @Test
     void shouldDeleteDemandeWhenIdExists() throws Exception {
-        Long id = 1L; 
+        Long id = 1L;
         doNothing().when(demandeService).deleteDemande(id);
 
         mockMvc.perform(delete("/api/demandes/{id}", id))
-                .andExpect(status().isNoContent()); 
+                .andExpect(status().isNoContent());
         verify(demandeService).deleteDemande(id);
     }
 
     @Test
     void shouldReturn404WhenDeletingNoExistingDemande() throws Exception {
-        Long id = 1L; 
+        Long id = 1L;
         doThrow(new DemandeNotFoundException("Demande not found"))
                 .when(demandeService).deleteDemande(id);
-        
+
         mockMvc.perform(delete("/api/demandes/{id}", id))
-                        .andExpect(status().isNotFound())
-                        .andExpect(jsonPath("$.message").value("Demande not found"))
-                        .andExpect(jsonPath("$.status").value(404)); 
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Demande not found"))
+                .andExpect(jsonPath("$.status").value(404));
         verify(demandeService).deleteDemande(id);
     }
 
     @Test
     void shouldUpdateDemandeWhenIdExists() throws Exception {
 
-        Long id = 1L; 
+        Long id = 1L;
 
         String requestJson = """
-        {
-            "name": "John Updated",
-            "surname": "Doe",
-            "typeDemande": "EMPLOI",
-            "status": "EN_COURS",
-            "fillingDate": "2024-06-20"
-        }
-        """;
+                {
+                    "name": "John Updated",
+                    "surname": "Doe",
+                    "typeDemande": "EMPLOI",
+                    "status": "EN_COURS",
+                    "fillingDate": "2024-06-20"
+                }
+                """;
         DemandeResponseDto dto = new DemandeResponseDto(
-            id,
-            "John Updated",
-            "Doe",
-            TypeDemande.EMPLOI,
-            StatusDemande.EN_COURS,
-            LocalDate.of(2024, 6, 20)); 
+                id,
+                "John Updated",
+                "Doe",
+                TypeDemande.EMPLOI,
+                StatusDemande.EN_COURS,
+                LocalDate.of(2024, 6, 20));
 
         when(demandeService.updateDemande(eq(id), any(DemandeRequestDto.class)))
-                .thenReturn(dto); 
-        
-        mockMvc.perform(put("/api/demandes/{id}", id)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(requestJson))
-                            .andExpect(status().isOk())
-                            .andExpect(jsonPath("$.id").value(id))
-                            .andExpect(jsonPath("$.name").value("John Updated")); 
-                    
-        verify(demandeService).updateDemande(eq(id), any(DemandeRequestDto.class));
+                .thenReturn(dto);
 
+        mockMvc.perform(put("/api/demandes/{id}", id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestJson))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(id))
+                .andExpect(jsonPath("$.name").value("John Updated"));
+
+        verify(demandeService).updateDemande(eq(id), any(DemandeRequestDto.class));
 
     }
 
     @Test
     void shouldReturn404WhenUpdatingNoExistingDemande() throws Exception {
 
-        Long id = 1L; 
+        Long id = 1L;
 
         String requestJson = """
-        {
-            "name": "John",
-            "surname": "Doe",
-            "typeDemande": "EMPLOI",
-            "status": "EN_COURS",
-            "fillingDate": "2024-06-20"
-        }
-        """;
+                {
+                    "name": "John",
+                    "surname": "Doe",
+                    "typeDemande": "EMPLOI",
+                    "status": "EN_COURS",
+                    "fillingDate": "2024-06-20"
+                }
+                """;
 
         when(demandeService.updateDemande(eq(id), any(DemandeRequestDto.class)))
-                .thenThrow(new DemandeNotFoundException("Demande not found")); 
+                .thenThrow(new DemandeNotFoundException("Demande not found"));
 
         mockMvc.perform(put("/api/demandes/{id}", id)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(requestJson))
-                            .andExpect(status().isNotFound())
-                            .andExpect(jsonPath("$.message").value("Demande not found"))
-                            .andExpect(jsonPath("$.status").value(404));
-        verify(demandeService).updateDemande(eq(id), any(DemandeRequestDto.class)); 
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestJson))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Demande not found"))
+                .andExpect(jsonPath("$.status").value(404));
+        verify(demandeService).updateDemande(eq(id), any(DemandeRequestDto.class));
     }
 
-    
 }
